@@ -41,7 +41,8 @@ class App extends React.Component {
                 <Button funktio={this.annaPalaute('hyva')} palaute='hyvä' />
                 <Button funktio={this.annaPalaute('keski')} palaute='en osaa sanoa' />
                 <Button funktio={this.annaPalaute('huono')} palaute='huono' />
-                <Statistics state={this.state} keskiarvo={this.keskiarvo()} positiivisia={this.positiivisia()}/>
+                <h1>statistiikka</h1>
+                <Statistics state={this.state} keskiarvo={this.keskiarvo()} positiivisia={this.positiivisia()} />
             </div>
         )
     }
@@ -56,9 +57,13 @@ const Button = (props) => {
 }
 
 const Statistics = (props) => {
+    if (props.state.hyva + props.state.keski + props.state.huono === 0) {
+        return (
+            <p>ei yhtään palautteita annettu</p>
+        )
+    }
     return (
         <div>
-            <h1>statistiikka</h1>
             <Statistic nimi='hyvä' arvo={props.state.hyva} />
             <Statistic nimi='en osaa sanoa' arvo={props.state.keski} />
             <Statistic nimi='huono' arvo={props.state.huono} />
