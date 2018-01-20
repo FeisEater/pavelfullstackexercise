@@ -38,18 +38,40 @@ class App extends React.Component {
         return (
             <div>
                 <h1>Anna palautetta</h1>
-                <button onClick={this.annaPalaute('hyva')}>hyvä</button>
-                <button onClick={this.annaPalaute('keski')}>en osaa sanoa</button>
-                <button onClick={this.annaPalaute('huono')}>huono</button>
-                <h1>statistiikka</h1>
-                <p>hyvä {this.state.hyva}</p>
-                <p>en osaa sanoa {this.state.keski}</p>
-                <p>huono {this.state.huono}</p>
-                <p>keskiarvo {this.keskiarvo()}</p>
-                <p>positiivisia {this.positiivisia()}</p>
+                <Button funktio={this.annaPalaute('hyva')} palaute='hyvä' />
+                <Button funktio={this.annaPalaute('keski')} palaute='en osaa sanoa' />
+                <Button funktio={this.annaPalaute('huono')} palaute='huono' />
+                <Statistics state={this.state} keskiarvo={this.keskiarvo()} positiivisia={this.positiivisia()}/>
             </div>
         )
     }
+}
+
+const Button = (props) => {
+    return (
+        <button onClick={props.funktio}>
+            {props.palaute}
+        </button>
+    )
+}
+
+const Statistics = (props) => {
+    return (
+        <div>
+            <h1>statistiikka</h1>
+            <Statistic nimi='hyvä' arvo={props.state.hyva} />
+            <Statistic nimi='en osaa sanoa' arvo={props.state.keski} />
+            <Statistic nimi='huono' arvo={props.state.huono} />
+            <Statistic nimi='keskiarvo' arvo={props.keskiarvo} />
+            <Statistic nimi='positiivisia' arvo={props.positiivisia} />
+        </div>
+    )
+}
+
+const Statistic = (props) => {
+    return (
+        <p>{props.nimi} {props.arvo}</p>
+    )
 }
 
 ReactDOM.render(
