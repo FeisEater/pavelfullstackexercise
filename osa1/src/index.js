@@ -1,60 +1,36 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const App = () => {
-    const kurssi = {
-        nimi: 'Half Stack -sovelluskehitys',
-        osat: [
-          {
-            nimi: 'Reactin perusteet',
-            tehtavia: 10
-          },
-          {
-            nimi: 'Tiedonvälitys propseilla',
-            tehtavia: 7
-          },
-          {
-            nimi: 'Komponenttien tila',
-            tehtavia: 14
-          }
-        ]
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            hyva: 0,
+            keski: 0,
+            huono: 0
+        }
     }
-      
-    return (
-        <div>
-            <Otsikko kurssi={kurssi.nimi} />
-            <Sisalto osat={kurssi.osat} />
-            <Yhteensa osat={kurssi.osat} />
-        </div>
-    )
-}
     
-const Otsikko = (props) => {
-    return (
-        <h1>{props.kurssi}</h1>
-    )
-}
+    annaPalaute = (palaute) => () => {
+        const newState = {};
+        newState[palaute] = this.state[palaute] + 1;
+        this.setState(newState);
+    }
 
-const Sisalto = (props) => {
-    return (
-        <div>
-            <Osa osa={props.osat[0]} />
-            <Osa osa={props.osat[1]} />
-            <Osa osa={props.osat[2]} />
-        </div>
-      )
-}
-
-const Osa = (props) => {
-    return (
-        <p>{props.osa.nimi} {props.osa.tehtavia}</p>
-    )
-}
-
-const Yhteensa = (props) => {
-    return (
-        <p>yhteensä {props.osat[0].tehtavia + props.osat[1].tehtavia + props.osat[2].tehtavia} tehtävää</p>
-    )
+    render() {
+        return (
+            <div>
+                <h1>Anna palautetta</h1>
+                <button onClick={this.annaPalaute('hyva')}>hyvä</button>
+                <button onClick={this.annaPalaute('keski')}>en osaa sanoa</button>
+                <button onClick={this.annaPalaute('huono')}>huono</button>
+                <h1>statistiikka</h1>
+                <p>hyvä {this.state.hyva}</p>
+                <p>en osaa sanoa {this.state.keski}</p>
+                <p>huono {this.state.huono}</p>
+            </div>
+        )
+    }
 }
 
 ReactDOM.render(
