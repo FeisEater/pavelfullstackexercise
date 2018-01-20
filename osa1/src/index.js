@@ -4,8 +4,11 @@ import ReactDOM from 'react-dom'
 class App extends React.Component {
   constructor(props) {
     super(props)
+    let votes = Array(anecdotes.length);
+    votes.fill(0, 0, anecdotes.length);
     this.state = {
-      selected: 0
+      selected: 0,
+      votes: votes
     }
   }
 
@@ -16,10 +19,18 @@ class App extends React.Component {
     this.setState({selected: nextIdx});
   }
 
+  voteAnecdote = () => () => {
+      let votesCopy = this.state.votes.slice();
+      votesCopy[this.state.selected] += 1;
+      this.setState({votes: votesCopy});
+  }
+
   render() {
     return (
       <div>
         <p>{this.props.anecdotes[this.state.selected]}</p>
+        <p>has {this.state.votes[this.state.selected]} votes</p>
+        <button onClick={this.voteAnecdote()}>vote</button>
         <button onClick={this.showRandomAnecdote()}>next anecdote</button>
       </div>
     )
