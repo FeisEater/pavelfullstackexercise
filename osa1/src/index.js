@@ -17,6 +17,23 @@ class App extends React.Component {
         this.setState(newState);
     }
 
+    palautteetSumma = () => this.state.hyva + this.state.keski + this.state.huono;
+
+    keskiarvo = () => {
+        if (this.palautteetSumma() === 0)
+            return 0.0;
+        const arvo = (this.state.hyva - this.state.huono) / this.palautteetSumma();
+        return Math.round(arvo * 10) / 10;
+    }
+
+    positiivisia = () => {
+        if (this.palautteetSumma() === 0)
+            return 0.0;
+        let arvo = (this.state.hyva * 100) / this.palautteetSumma();
+        arvo = Math.round(arvo * 10) / 10;
+        return arvo + '%';
+    }
+
     render() {
         return (
             <div>
@@ -28,6 +45,8 @@ class App extends React.Component {
                 <p>hyvä {this.state.hyva}</p>
                 <p>en osaa sanoa {this.state.keski}</p>
                 <p>huono {this.state.huono}</p>
+                <p>keskiarvo {this.keskiarvo()}</p>
+                <p>positiivisia {this.positiivisia()}</p>
             </div>
         )
     }
