@@ -63,19 +63,24 @@ const Statistics = (props) => {
         )
     }
     return (
-        <div>
-            <Statistic nimi='hyvä' arvo={props.state.hyva} />
-            <Statistic nimi='en osaa sanoa' arvo={props.state.keski} />
-            <Statistic nimi='huono' arvo={props.state.huono} />
-            <Statistic nimi='keskiarvo' arvo={props.keskiarvo} />
-            <Statistic nimi='positiivisia' arvo={props.positiivisia} />
-        </div>
+        <table>
+            <tbody>
+                <Statistic nimi='hyvä' arvo={props.state.hyva} />
+                <Statistic nimi='en osaa sanoa' arvo={props.state.keski} />
+                <Statistic nimi='huono' arvo={props.state.huono} />
+                <Statistic nimi='keskiarvo' arvo={props.keskiarvo} />
+                <Statistic nimi='positiivisia' arvo={props.positiivisia} />
+            </tbody>
+        </table>
     )
 }
 
 const Statistic = (props) => {
     return (
-        <p>{props.nimi} {props.arvo}</p>
+        <tr>
+            <td>{props.nimi}</td>
+            <td>{props.arvo}</td>
+        </tr>
     )
 }
 
