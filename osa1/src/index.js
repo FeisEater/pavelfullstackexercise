@@ -25,16 +25,38 @@ class App extends React.Component {
       this.setState({votes: votesCopy});
   }
 
+  bestAnecdoteIdx = () => {
+    let idx = 0;
+    let record = 0;
+    this.state.votes.forEach((votes, i) => {
+        if (votes > record) {
+            idx = i;
+            record = votes;
+        }
+    });
+    return idx;
+  }
+
   render() {
+    const best = this.bestAnecdoteIdx();
     return (
       <div>
-        <p>{this.props.anecdotes[this.state.selected]}</p>
-        <p>has {this.state.votes[this.state.selected]} votes</p>
+        <Anecdote anecdotes={this.props.anecdotes} state={this.state} idx={this.state.selected} />
         <button onClick={this.voteAnecdote()}>vote</button>
         <button onClick={this.showRandomAnecdote()}>next anecdote</button>
+        <Anecdote anecdotes={this.props.anecdotes} state={this.state} idx={best} />
       </div>
     )
   }
+}
+
+const Anecdote = (props) => {
+    return (
+        <div>
+            <p>{props.anecdotes[props.idx]}</p>
+            <p>has {props.state.votes[props.idx]} votes</p>
+        </div>
+    )
 }
 
 const anecdotes = [
