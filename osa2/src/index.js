@@ -27,6 +27,7 @@ const App = () => {
         <div>
             <Otsikko kurssi={kurssi.nimi} />
             <Sisalto osat={kurssi.osat} />
+            <Yhteensa osat={kurssi.osat} />
         </div>
     )
 }
@@ -48,6 +49,12 @@ const Sisalto = (props) => {
 const Osa = (props) => {
     return (
         <p>{props.osa.nimi} {props.osa.tehtavia}</p>
+    )
+}
+
+const Yhteensa = (props) => {
+    return (
+        <p>yhteensä {props.osat.reduce((acc, osa) => acc + osa.tehtavia, 0)} tehtävää</p>
     )
 }
 
