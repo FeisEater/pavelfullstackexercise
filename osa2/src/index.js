@@ -2,8 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-    const kurssi = {
+    const kurssit = [
+      {
         nimi: 'Half Stack -sovelluskehitys',
+        id: 1,
         osat: [
           {
             nimi: 'Reactin perusteet',
@@ -21,17 +23,42 @@ const App = () => {
             id: 3
           }
         ]
-    }
-      
+      },
+      {
+        nimi: 'Node.js',
+        id: 2,
+        osat: [
+          {
+            nimi: 'Routing',
+            tehtavia: 3,
+            id: 1
+          },
+          {
+            nimi: 'Middlewaret',
+            tehtavia: 7,
+            id: 2
+          }
+        ]
+      }
+    ]
+
     return (
         <div>
-            <Otsikko kurssi={kurssi.nimi} />
-            <Sisalto osat={kurssi.osat} />
-            <Yhteensa osat={kurssi.osat} />
+            {kurssit.map(kurssi => <Kurssi key={kurssi.id} kurssi={kurssi} />)}
         </div>
     )
 }
-    
+
+const Kurssi = (props) => {
+    return (
+        <div>
+            <Otsikko kurssi={props.kurssi.nimi} />
+            <Sisalto osat={props.kurssi.osat} />
+            <Yhteensa osat={props.kurssi.osat} />
+        </div>
+    )
+}
+
 const Otsikko = (props) => {
     return (
         <h1>{props.kurssi}</h1>
