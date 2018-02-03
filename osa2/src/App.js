@@ -13,6 +13,12 @@ class App extends React.Component {
   
     addEntry = (event) => {
         event.preventDefault()
+        
+        if (this.state.persons.find(person => person.name === this.state.newName) !== undefined) {
+            alert('Already added ' + this.state.newName);
+            return;
+        }
+
         const personObject = {
             name: this.state.newName,
             id: this.state.persons.length
