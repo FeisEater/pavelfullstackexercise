@@ -5,9 +5,10 @@ class App extends React.Component {
       super(props)
       this.state = {
         persons: [
-          { name: 'Arto Hellas', id: 0 }
+          { name: 'Arto Hellas', number: '0800123123', id: 0 }
         ],
-        newName: ''
+        newName: '',
+        newNumber: ''
       }
     }
   
@@ -21,6 +22,7 @@ class App extends React.Component {
 
         const personObject = {
             name: this.state.newName,
+            number: this.state.newNumber,
             id: this.state.persons.length
         }
         
@@ -28,12 +30,17 @@ class App extends React.Component {
         
         this.setState({
             persons,
-            newName: ''
+            newName: '',
+            newNumber: ''
         })
     }
 
-    handleChange = (event) => {
+    handleNameChange = (event) => {
         this.setState({ newName: event.target.value })
+    }
+
+    handleNumberChange = (event) => {
+        this.setState({ newNumber: event.target.value })
     }
       
     render() {
@@ -42,16 +49,19 @@ class App extends React.Component {
           <h2>Puhelinluettelo</h2>
           <form onSubmit={this.addEntry}>
             <div>
-              nimi: <input value={this.state.newName} onChange={this.handleChange} />
+              nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
+            </div>
+            <div>
+              numero: <input value={this.state.newNumber} onChange={this.handleNumberChange} />
             </div>
             <div>
               <button type="submit">lisää</button>
             </div>
           </form>
           <h2>Numerot</h2>
-          <div>
+          <table><tbody>
               {this.state.persons.map(person => <Person key={person.id} person={person} />)}
-          </div>
+          </tbody></table>
         </div>
       )
     }
@@ -59,9 +69,10 @@ class App extends React.Component {
 
 const Person = (props) => {
     return (
-        <div>
-            {props.person.name}
-        </div>
+        <tr>
+            <td>{props.person.name}</td>
+            <td>{props.person.number}</td>
+        </tr>
     )
 }
 
