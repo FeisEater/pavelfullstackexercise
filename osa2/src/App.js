@@ -1,5 +1,6 @@
 import React from 'react'
 import PersonList from './components/Person'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 class App extends React.Component {
@@ -9,7 +10,8 @@ class App extends React.Component {
         persons: [],
         newName: '',
         newNumber: '',
-        filter: ''
+        filter: '',
+        message: null
       }
     }
 
@@ -44,7 +46,8 @@ class App extends React.Component {
                 this.setState({
                     persons,
                     newName: '',
-                    newNumber: ''
+                    newNumber: '',
+                    message: 'Muutettiin puhelinnumero henkilölle ' + response.data.name + ': ' + response.data.number
                 })
             })
         } else {
@@ -54,10 +57,14 @@ class App extends React.Component {
                 this.setState({
                     persons: this.state.persons.concat(response.data),
                     newName: '',
-                    newNumber: ''
+                    newNumber: '',
+                    message: response.data.name + ' lisätty luetteloon'
                 })
             })
         }
+        setTimeout(() => {
+            this.setState({message: null})
+        }, 3000)
     }
 
     removeEntry = (person) => {
@@ -70,7 +77,10 @@ class App extends React.Component {
             personService
             .getAll()
             .then(response => {
-                this.setState({ persons: response.data })
+                this.setState({ persons: response.data, message: person.name + ' poistettu' })
+                setTimeout(() => {
+                    this.setState({message: null})
+                }, 3000)        
             })
         })
     }
@@ -91,6 +101,7 @@ class App extends React.Component {
         return (
         <div>
           <h2>Puhelinluettelo</h2>
+          <Notification message={this.state.message}/>
           <div>
             rajaa näytettäviä: <input value={this.state.filter} onChange={this.handleFilterChange} />
           </div>

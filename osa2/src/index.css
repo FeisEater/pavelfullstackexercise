@@ -3,3 +3,13 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.message {
+  color: rgb(0, 0, 0);
+  background: rgb(39, 124, 0);
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 1px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
