@@ -24,25 +24,40 @@ class App extends React.Component {
     addEntry = (event) => {
         event.preventDefault()
         
-        if (this.state.persons.find(person => person.name === this.state.newName) !== undefined) {
-            alert('Already added ' + this.state.newName);
-            return;
-        }
-
         const personObject = {
             name: this.state.newName,
             number: this.state.newNumber,
         }
-        
-        personService
-        .create(personObject)
-        .then(response => {
-            this.setState({
-                persons: this.state.persons.concat(response.data),
-                newName: '',
-                newNumber: ''
+
+        const foundPerson = this.state.persons.find(person => person.name === this.state.newName)
+        if (foundPerson !== undefined) {
+            if (!window.confirm(foundPerson.name + ' on jo luettelossa, korvataanko henkilön puhelinnumero?'))
+                return
+            personService
+            .update(foundPerson.id, personObject)
+            .then(response => {
+                const persons = this.state.persons.map(person => {
+                    if (person.name === response.data.name)
+                        return response.data
+                    return person
+                })
+                this.setState({
+                    persons,
+                    newName: '',
+                    newNumber: ''
+                })
             })
-        })
+        } else {
+            personService
+            .create(personObject)
+            .then(response => {
+                this.setState({
+                    persons: this.state.persons.concat(response.data),
+                    newName: '',
+                    newNumber: ''
+                })
+            })
+        }
     }
 
     removeEntry = (person) => {
