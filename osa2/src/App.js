@@ -1,4 +1,5 @@
 import React from 'react'
+import PersonList from './components/Person'
 
 class App extends React.Component {
     constructor(props) {
@@ -51,10 +52,6 @@ class App extends React.Component {
     }
 
     render() {
-        const shownPersons = this.state.filter === '' ?
-            this.state.persons :
-            this.state.persons.filter(person => person.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) >= 0);
-
         return (
         <div>
           <h2>Puhelinluettelo</h2>
@@ -74,21 +71,10 @@ class App extends React.Component {
             </div>
           </form>
           <h2>Numerot</h2>
-          <table><tbody>
-              {shownPersons.map(person => <Person key={person.id} person={person} />)}
-          </tbody></table>
+          <PersonList filter={this.state.filter} persons={this.state.persons} />
         </div>
       )
     }
   }
-
-const Person = (props) => {
-    return (
-        <tr>
-            <td>{props.person.name}</td>
-            <td>{props.person.number}</td>
-        </tr>
-    )
-}
 
 export default App
