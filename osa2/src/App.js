@@ -1,62 +1,83 @@
 import React from 'react'
-import axios from 'axios'
+import PersonList from './components/Person'
+import personService from './services/persons'
 
 class App extends React.Component {
     constructor(props) {
       super(props)
       this.state = {
-        countries: [],
+        persons: [],
+        newName: '',
+        newNumber: '',
         filter: ''
       }
     }
 
     componentDidMount() {
-        axios.get('https://restcountries.eu/rest/v2/all')
+        personService
+        .getAll()
         .then(response => {
-            this.setState({ countries: response.data })
+            this.setState({ persons: response.data })
         })
+    }
+
+    addEntry = (event) => {
+        event.preventDefault()
+        
+        if (this.state.persons.find(person => person.name === this.state.newName) !== undefined) {
+            alert('Already added ' + this.state.newName);
+            return;
+        }
+
+        const personObject = {
+            name: this.state.newName,
+            number: this.state.newNumber,
+        }
+        
+        personService
+        .create(personObject)
+        .then(response => {
+            this.setState({
+                persons: this.state.persons.concat(response.data),
+                newName: '',
+                newNumber: ''
+            })
+        })
+    }
+
+    handleNameChange = (event) => {
+        this.setState({ newName: event.target.value })
+    }
+
+    handleNumberChange = (event) => {
+        this.setState({ newNumber: event.target.value })
     }
 
     handleFilterChange = (event) => {
         this.setState({ filter: event.target.value })
     }
 
-    showCountry = (countryName) => {
-        this.setState({ filter: countryName })
-    }
-
     render() {
-        const shownCountries = this.state.filter === '' ?
-        this.state.countries :
-        this.state.countries.filter(country => country.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) >= 0);
-        const country = shownCountries[0]
-
         return (
         <div>
+          <h2>Puhelinluettelo</h2>
           <div>
-            find countries: <input value={this.state.filter} onChange={this.handleFilterChange} />
+            rajaa näytettäviä: <input value={this.state.filter} onChange={this.handleFilterChange} />
           </div>
-          {shownCountries.length > 10 &&
-            <p>Too many matches, please give a more specific filter</p>
-          }
-          {shownCountries.length <= 0 &&
-            <p>No results found</p>
-          }
-          {shownCountries.length > 1 && shownCountries.length <= 10 &&
+          <h2>Lisää uusi</h2>
+          <form onSubmit={this.addEntry}>
             <div>
-                {shownCountries.map(country => <div key={country.name} onClick={() => this.showCountry(country.name)}>{country.name}</div>)}
+              nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
             </div>
-          }
-          {shownCountries.length === 1 &&
             <div>
-                <h2>{country.name} {country.nativeName}</h2>
-                <p>Capital: {country.capital}</p>
-                <p>Population: {country.population}</p>
-                <h3>Languages</h3>
-                {country.languages.map(lang => <div key={lang.name}>{lang.name} {lang.nativeName}</div>)}
-                <img src={country.flag} height="256"></img>
+              numero: <input value={this.state.newNumber} onChange={this.handleNumberChange} />
             </div>
-          }
+            <div>
+              <button type="submit">lisää</button>
+            </div>
+          </form>
+          <h2>Numerot</h2>
+          <PersonList filter={this.state.filter} persons={this.state.persons} />
         </div>
       )
     }
