@@ -50,6 +50,22 @@ class App extends React.Component {
                     message: 'Muutettiin puhelinnumero henkilölle ' + response.data.name + ': ' + response.data.number
                 })
             })
+            .catch(error => {
+                personService
+                .create(personObject)
+                .then(response => {
+                    personService
+                    .getAll()
+                    .then(response => {
+                        this.setState({
+                            persons: response.data,
+                            newName: '',
+                            newNumber: '',
+                            message: 'Muutettiin puhelinnumero henkilölle ' + personObject.name + ': ' + personObject.number
+                        })    
+                    })
+                })                    
+            })
         } else {
             personService
             .create(personObject)
