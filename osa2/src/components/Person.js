@@ -5,6 +5,7 @@ const Person = (props) => {
         <tr>
             <td>{props.person.name}</td>
             <td>{props.person.number}</td>
+            <td><button onClick={() => props.removeFunc(props.person)}>Poista</button></td>
         </tr>
     )
 }
@@ -16,7 +17,7 @@ const PersonList = (props) => {
 
     return (
         <table><tbody>
-            {shownPersons.map(person => <Person key={person.id} person={person} />)}
+            {shownPersons.map(person => <Person key={person.id} person={person} removeFunc={props.removeFunc} />)}
         </tbody></table>
     )
 }
