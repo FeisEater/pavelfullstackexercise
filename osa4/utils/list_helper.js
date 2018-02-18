@@ -23,8 +23,31 @@ const favoriteBlog = (blogs) => {
     }
 }
 
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0)
+        return {}
+    let blogCountByAuthor = {}
+    let record = 0
+    let recordAuthor = ""
+    blogs.forEach(blog => {
+        if (blog.author in blogCountByAuthor)
+            blogCountByAuthor[blog.author] += 1
+        else
+            blogCountByAuthor[blog.author] = 1
+        if (blogCountByAuthor[blog.author] > record) {
+            record = blogCountByAuthor[blog.author]
+            recordAuthor = blog.author
+        }
+    })
+    return {
+        author: recordAuthor,
+        blogs: record
+    }
+}
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
