@@ -54,7 +54,7 @@ const initialBlogs = [
     }  
 ]
 
-beforeAll(async () => {
+beforeEach(async () => {
   await Blog.remove({})
 
   const blogObjects = initialBlogs.map(blog => new Blog(blog))
@@ -111,8 +111,35 @@ test('a valid blog can be added ', async () => {
       
     expect(response.body.length).toBe(initialBlogs.length + 1)
     expect(blogs).toContainEqual(newBlog)
-  })
+})
   
+test('blog without likes defaults to zero', async () => {
+    const newBlog = {
+        title: "Blog title",
+        author: "Me",
+        url: "cool.com"
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+  
+    const response = await api
+      .get('/api/blogs')
+  
+    const blogs = response.body.map(blog => {return {title: blog.title, author: blog.author, url: blog.url, likes: blog.likes}})
+      
+    expect(response.body.length).toBe(initialBlogs.length + 1)
+    expect(blogs).toContainEqual({
+        title: "Blog title",
+        author: "Me",
+        url: "cool.com",
+        likes: 0
+    })
+})
+
 afterAll(() => {
   server.close()
 })
