@@ -140,6 +140,40 @@ test('blog without likes defaults to zero', async () => {
     })
 })
 
+test('blog without title cant be saved', async () => {
+    const newBlog = {
+        author: "Me",
+        url: "cool.com"
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  
+    const response = await api
+      .get('/api/blogs')
+  
+    expect(response.body.length).toBe(initialBlogs.length)
+})
+
+test('blog without url cant be saved', async () => {
+    const newBlog = {
+        title: "Blog title",
+        author: "Me"
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  
+    const response = await api
+      .get('/api/blogs')
+  
+    expect(response.body.length).toBe(initialBlogs.length)
+})
+
 afterAll(() => {
   server.close()
 })
