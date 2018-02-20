@@ -80,15 +80,38 @@ test('a specific blog is within the returned blogs', async () => {
   const response = await api
     .get('/api/blogs')
 
-  expect(response.body).toContainEqual({
-    _id: "5a422aa71b54a676234d17f8",
+  const blogs = response.body.map(blog => {return {title: blog.title, author: blog.author, url: blog.url, likes: blog.likes}})
+
+  expect(blogs).toContainEqual({
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    likes: 5,
-    __v: 0
+    likes: 5
   })
 })
+
+test('a valid blog can be added ', async () => {
+    const newBlog = {
+        title: "Blog title",
+        author: "Me",
+        url: "cool.com",
+        likes: 2
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+  
+    const response = await api
+      .get('/api/blogs')
+  
+    const blogs = response.body.map(blog => {return {title: blog.title, author: blog.author, url: blog.url, likes: blog.likes}})
+      
+    expect(response.body.length).toBe(initialBlogs.length + 1)
+    expect(blogs).toContainEqual(newBlog)
+  })
   
 afterAll(() => {
   server.close()
