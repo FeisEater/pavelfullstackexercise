@@ -21,7 +21,7 @@ usersRouter.post('/', async (request, response) => {
       username: body.username,
       name: body.name,
       adult: body.adult === undefined ? true : body.adult,
-      passwordHashpop
+      passwordHash
     })
 
     const savedUser = await user.save()

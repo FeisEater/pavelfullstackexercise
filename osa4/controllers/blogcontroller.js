@@ -15,7 +15,7 @@ blogRouter.post('/', async (request, response) => {
         author: request.body.author,
         url: request.body.url,
         likes: request.body.likes,
-        user: user._id
+        user: user === null ? null : user._id
     })
     if (blog.title === undefined)
         return response.status(400).json({ error: 'title missing' })
@@ -24,8 +24,10 @@ blogRouter.post('/', async (request, response) => {
     if (blog.likes === undefined)
         blog.likes = 0
     const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
+    if (user !== null) {
+        user.blogs = user.blogs.concat(savedBlog._id)
+        await user.save()
+    }
     response.status(201).json(blog)
 })
 
