@@ -154,6 +154,114 @@ describe('DELETE', async () => {
     })
 })
 
+describe('PUT', async () => {
+    let testBlog
+    beforeAll(async () => {
+        testBlog = new Blog({
+            title: "Blog title6",
+            author: "Me6",
+            url: "cool6.com",
+            likes: 2
+        })
+        await testBlog.save()
+    })
+
+    beforeEach(async() => {
+        const defaultBlog = {
+            title: "Blog title6",
+            author: "Me6",
+            url: "cool6.com",
+            likes: 2
+        }
+        await Blog.findByIdAndUpdate(testBlog._id, defaultBlog, { new: true } )
+    })
+
+    test('blog can be edited', async () => {
+        const blogsInDatabase = await blogsInDb()
+        const editedBlog = {
+            title: "New title",
+            author: "You",
+            url: "great.com",
+            likes: 3
+        }
+      
+        await api
+          .put(`/api/blogs/${testBlog._id}`)
+          .send(editedBlog)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+      
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
+        expect(blogsAfter).toContainEqual(editedBlog)
+        expect(blogsAfter).not.toContainEqual(formatBlog(testBlog))        
+    })
+      
+    test('if only likes field is supplied, only likes are edited', async () => {
+        const blogsInDatabase = await blogsInDb()
+        const editedBlog = {
+            likes: 0
+        }
+      
+        await api
+          .put(`/api/blogs/${testBlog._id}`)
+          .send(editedBlog)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+      
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
+        expect(blogsAfter).toContainEqual({
+            title: "Blog title6",
+            author: "Me6",
+            url: "cool6.com",
+            likes: 0
+        })
+    })
+    
+    test('if only title field is supplied, only title is edited', async () => {
+        const blogsInDatabase = await blogsInDb()
+        const editedBlog = {
+            title: 'New Blog'
+        }
+      
+        await api
+          .put(`/api/blogs/${testBlog._id}`)
+          .send(editedBlog)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+      
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
+        expect(blogsAfter).toContainEqual({
+            title: "New Blog",
+            author: "Me6",
+            url: "cool6.com",
+            likes: 2
+        })
+    })
+    
+    test('with invalid id nothing is edited', async () => {
+        const blogsInDatabase = await blogsInDb()
+        const editedBlog = {
+            title: "New title",
+            author: "You",
+            url: "great.com",
+            likes: 3
+        }
+
+        await api
+          .put('/api/blogs/badurl')
+          .send(editedBlog)
+          .expect(400)
+
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
+        expect(blogsAfter).not.toContainEqual(editedBlog)
+        expect(blogsAfter).toContainEqual(formatBlog(testBlog))        
+    })
+})
+
 afterAll(() => {
   server.close()
 })
