@@ -1,9 +1,10 @@
-POST http://localhost:3001/api/users
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-    "username": "pasmpasm",
-    "name": "Pavel Smirnov",
-    "adult": true,
-    "password": "pasmpasm"
+    "title": "Pavel Blog",
+    "author": "Pavel",
+    "url": "pavel.com",
+    "likes": 3,
+    "userId": "5a92c20f0244e832f8d11a09"
 }
