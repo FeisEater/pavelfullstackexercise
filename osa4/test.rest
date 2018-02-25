@@ -1,7 +1,10 @@
-POST http://localhost:3001/api/login
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhc21wYXNtIiwiaWQiOiI1YTkyZDc4ZWEzYjg4YTUyMjRkNGQyMmYiLCJpYXQiOjE1MTk1NzM4Nzl9.PFmSXPBgvpIlkLkx6c3uq0XOPyo1r9axouFez6nr85U
 
 {
-    "username": "pasmpasm",
-    "password": "salasana"
+    "title": "authorised title",
+    "author": "me",
+    "url": "cool.com",
+    "likes": 17
 }

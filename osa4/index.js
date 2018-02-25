@@ -9,11 +9,22 @@ const blogRouter = require('./controllers/blogcontroller')
 const userRouter = require('./controllers/usercontroller')
 const loginRouter = require('./controllers/logincontroller')
 
+const getToken = (req, res, next) => {
+    const authorization = req.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+      req.token = authorization.substring(7)
+    }
+    next()
+}
+
 app.use(cors())
 app.use(bodyParser.json())
+app.use('/api/login', loginRouter)
+
+app.use(getToken)
+
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
-app.use('/api/login', loginRouter)
 
 mongoose
 .connect(config.mongoUrl)

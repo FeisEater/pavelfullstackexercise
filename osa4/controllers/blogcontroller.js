@@ -1,6 +1,7 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 blogRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -9,26 +10,42 @@ blogRouter.get('/', async (request, response) => {
 })
   
 blogRouter.post('/', async (request, response) => {
-    const user = await User.findById(request.body.userId)
-    const blog = new Blog({
-        title: request.body.title,
-        author: request.body.author,
-        url: request.body.url,
-        likes: request.body.likes,
-        user: user === null ? null : user._id
-    })
-    if (blog.title === undefined)
-        return response.status(400).json({ error: 'title missing' })
-    if (blog.url === undefined)
-        return response.status(400).json({ error: 'url missing' })
-    if (blog.likes === undefined)
-        blog.likes = 0
-    const savedBlog = await blog.save()
-    if (user !== null) {
-        user.blogs = user.blogs.concat(savedBlog._id)
-        await user.save()
+    try {
+        const token = request.token
+        const decodedToken = jwt.verify(token, process.env.SECRET)
+    
+        if (!token || !decodedToken.id) {
+          return response.status(401).json({ error: 'token missing or invalid' })
+        }
+    
+        const user = await User.findById(decodedToken.id)
+        const blog = new Blog({
+            title: request.body.title,
+            author: request.body.author,
+            url: request.body.url,
+            likes: request.body.likes,
+            user: user === null ? null : user._id
+        })
+        if (blog.title === undefined)
+            return response.status(400).json({ error: 'title missing' })
+        if (blog.url === undefined)
+            return response.status(400).json({ error: 'url missing' })
+        if (blog.likes === undefined)
+            blog.likes = 0
+        const savedBlog = await blog.save()
+        if (user !== null) {
+            user.blogs = user.blogs.concat(savedBlog._id)
+            await user.save()
+        }
+        response.status(201).json(blog)
+    } catch (exception) {
+        if (exception.name === 'JsonWebTokenError' ) {
+            response.status(401).json({ error: exception.message })
+        } else {
+            console.log(exception)
+            response.status(500).json({ error: 'something went wrong...' })
+        }
     }
-    response.status(201).json(blog)
 })
 
 blogRouter.delete('/:id', async (request, response) => {
