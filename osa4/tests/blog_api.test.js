@@ -59,21 +59,17 @@ describe('POST', async () => {
           .expect(201)
           .expect('Content-Type', /application\/json/)
       
-        const response = await api
-          .get('/api/blogs')
-      
-        const blogs = response.body.map(formatBlog)
-          
-        expect(response.body.length).toBe(blogsInDatabase.length + 1)
-        expect(blogs).toContainEqual(newBlog)
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length + 1)
+        expect(blogsAfter).toContainEqual(newBlog)
     })
       
     test('blog without likes defaults to zero', async () => {
         const blogsInDatabase = await blogsInDb()
         const newBlog = {
-            title: "Blog title",
-            author: "Me",
-            url: "cool.com"
+            title: "Blog title2",
+            author: "Me2",
+            url: "cool2.com"
         }
       
         await api
@@ -82,16 +78,12 @@ describe('POST', async () => {
           .expect(201)
           .expect('Content-Type', /application\/json/)
       
-        const response = await api
-          .get('/api/blogs')
-      
-        const blogs = response.body.map(formatBlog)
-          
-        expect(response.body.length).toBe(blogsInDatabase.length + 1)
-        expect(blogs).toContainEqual({
-            title: "Blog title",
-            author: "Me",
-            url: "cool.com",
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length + 1)
+        expect(blogsAfter).toContainEqual({
+            title: "Blog title2",
+            author: "Me2",
+            url: "cool2.com",
             likes: 0
         })
     })
@@ -99,8 +91,8 @@ describe('POST', async () => {
     test('blog without title cant be saved', async () => {
         const blogsInDatabase = await blogsInDb()
         const newBlog = {
-            author: "Me",
-            url: "cool.com"
+            author: "Me3",
+            url: "cool3.com"
         }
       
         await api
@@ -108,17 +100,15 @@ describe('POST', async () => {
           .send(newBlog)
           .expect(400)
       
-        const response = await api
-          .get('/api/blogs')
-      
-        expect(response.body.length).toBe(blogsInDatabase.length)
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
     })
     
     test('blog without url cant be saved', async () => {
         const blogsInDatabase = await blogsInDb()
         const newBlog = {
-            title: "Blog title",
-            author: "Me"
+            title: "Blog title4",
+            author: "Me4"
         }
       
         await api
@@ -126,10 +116,41 @@ describe('POST', async () => {
           .send(newBlog)
           .expect(400)
       
-        const response = await api
-          .get('/api/blogs')
-      
-        expect(response.body.length).toBe(blogsInDatabase.length)
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
+    })
+})
+
+describe('DELETE', async () => {
+    let testBlog
+    beforeEach(async () => {
+        testBlog = new Blog({
+            title: "Blog title5",
+            author: "Me5",
+            url: "cool5.com",
+            likes: 2
+        })
+        await testBlog.save()
+    })
+
+    test('blog can be deleted', async () => {
+        const blogsInDatabase = await blogsInDb()
+        await api
+          .delete(`/api/blogs/${testBlog._id}`)
+          .expect(204)
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter).not.toContainEqual(testBlog)
+        expect(blogsAfter.length).toBe(blogsInDatabase.length - 1)
+    })
+
+    test('with invalid id nothing is deleted', async () => {
+        const blogsInDatabase = await blogsInDb()
+        await api
+          .delete('/api/blogs/badurl')
+          .expect(400)
+        const blogsAfter = await blogsInDb()
+        expect(blogsAfter).toContainEqual(formatBlog(testBlog))
+        expect(blogsAfter.length).toBe(blogsInDatabase.length)
     })
 })
 

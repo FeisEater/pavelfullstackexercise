@@ -18,4 +18,14 @@ blogRouter.post('/', async (request, response) => {
     response.status(201).json(blog)
 })
 
+blogRouter.delete('/:id', async (request, response) => {
+    try {
+        await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).end()
+    } catch (exception) {
+        console.log(exception)
+        response.status(400).send({ error: 'malformatted id' })
+    }
+})
+
 module.exports = blogRouter
