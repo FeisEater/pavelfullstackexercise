@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
     {
@@ -48,7 +49,28 @@ const initialBlogs = [
       url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
       likes: 2,
       __v: 0
-    }  
+    }
+]
+
+const initialUsers = [
+    {
+        _id: "5a92bf6b3fe9f0362c325723",
+        username: "user",
+        name: "User",
+        adult: true,
+        passwordHash: "$2a$10$6UC8.S2py.qi/yEQ3OhMb.IPf6QX9cMQck/7A1FjCLK87IkxMidB2",
+        blogs: [],
+        __v: 0
+    },
+    {
+        _id: "5a92c20f0244e832f8d11a09",
+        username: "pasmpasm",
+        name: "Pavel Smirnov",
+        adult: true,
+        passwordHash: "$2a$10$pbMMtw.JpIRCuNdS0afw6ufkmpMKlpbxtBob.6f.9q2g/9uK71Av2",
+        blogs: [],
+        __v: 0
+    }
 ]
 
 const formatBlog = (blog) => {
@@ -65,6 +87,19 @@ const blogsInDb = async () => {
     return blogs.map(formatBlog)
 }
 
+const formatUser = (user) => {
+    return {
+        username: user.username,
+        name: user.name,
+        adult: user.adult
+    }
+}
+
+const usersInDb = async () => {
+    const users = await User.find({})
+    return users.map(formatUser)
+}
+
 module.exports = {
-    initialBlogs, formatBlog, blogsInDb
+    initialBlogs, formatBlog, blogsInDb, initialUsers, usersInDb
 }
