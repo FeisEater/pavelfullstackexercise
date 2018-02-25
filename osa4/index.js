@@ -7,11 +7,13 @@ const mongoose = require('mongoose')
 const config = require('./utils/config')
 const blogRouter = require('./controllers/blogcontroller')
 const userRouter = require('./controllers/usercontroller')
+const loginRouter = require('./controllers/logincontroller')
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
+app.use('/api/login', loginRouter)
 
 mongoose
 .connect(config.mongoUrl)
