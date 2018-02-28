@@ -1,0 +1,19 @@
+.message-info {
+    color: rgb(0, 0, 0);
+    background: rgb(39, 124, 0);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 1px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.message-error {
+    color: rgb(0, 0, 0);
+    background: rgb(124, 0, 0);
+    font-size: 20px;
+    border-style: solid;
+    border-radius: 1px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

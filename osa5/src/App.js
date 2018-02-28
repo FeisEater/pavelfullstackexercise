@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -10,8 +11,14 @@ class App extends React.Component {
       blogs: [],
       username: '',
       password: '',
-      user: null
+      user: null,
+      newtitle: '',
+      newauthor: '',
+      newurl: '',
+      message: null,
+      messageIsError: false
     }
+    this.msgTimeout = setTimeout(() => {}, 0)
   }
 
   componentDidMount() {
@@ -22,8 +29,20 @@ class App extends React.Component {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({user})
+      blogService.setToken(user.token)
     }  
   } 
+
+  showMessage = (msg, isError) => {
+    this.setState({
+      message: msg,
+      messageIsError: isError
+    })
+    clearTimeout(this.msgTimeout)
+    this.msgTimeout = setTimeout(() => {
+      this.setState({ message: null })
+    }, 5000)
+  }
 
   login = async (event) => {
     event.preventDefault()
@@ -34,30 +53,54 @@ class App extends React.Component {
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       this.setState({ username: '', password: '', user})
+      blogService.setToken(user.token)
     } catch(exception) {
-      console.log('problem with logging in');
-/*      this.setState({
-        error: 'käyttäjätunnus tai salasana virheellinen',
-      })
-      setTimeout(() => {
-        this.setState({ error: null })
-      }, 5000)*/
+      this.showMessage('käyttäjätunnus tai salasana virheellinen', true)
     }
   }
 
   logout = event => {
     window.localStorage.removeItem('loggedUser')   
-    this.setState({user: null}) 
+    this.setState({user: null})
+    blogService.setToken(null)
+    this.showMessage('kirjauduttu ulos', false)
   }
 
   handleLoginFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
+
+  handleBlogFieldChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
   
+  createBlog = async (event) => {
+    event.preventDefault()    
+    try {
+      const savedBlog = await blogService.createBlog({
+        title: this.state.newtitle,
+        author: this.state.newauthor,
+        url: this.state.newurl,
+        likes: 0
+      })
+      this.setState({
+        newtitle: '',
+        newauthor: '',
+        newurl: '',
+        blogs: this.state.blogs.concat(savedBlog)
+      })
+      this.showMessage('Blogi luotu', false)
+    } catch (exception) {
+      console.log(exception)
+      this.showMessage('Jokin meni päin persettä, lue logi', true)      
+    }
+  }
+
   render() {
     if (this.state.user === null) {
       return (
         <div>
+          <Notification message={this.state.message} isError={this.state.messageIsError}/>
           <h2>Kirjaudu</h2>
   
           <form onSubmit={this.login}>
@@ -87,8 +130,41 @@ class App extends React.Component {
     
     return (
       <div>
+        <Notification message={this.state.message} isError={this.state.messageIsError}/>
         <h2>blogs</h2>
         <div>{this.state.user.name} logged in <button onClick={this.logout}>Log out</button></div>
+        <br/>
+        <h2>Create new</h2>
+        <form onSubmit={this.createBlog}>
+          <div>
+            otsikko
+            <input
+              type="text"
+              name="newtitle"
+              value={this.state.newtitle}
+              onChange={this.handleBlogFieldChange}
+            />
+          </div>
+          <div>
+            tekijä
+            <input
+              type="text"
+              name="newauthor"
+              value={this.state.newauthor}
+              onChange={this.handleBlogFieldChange}
+            />
+          </div>
+          <div>
+            url
+            <input
+              type="text"
+              name="newurl"
+              value={this.state.newurl}
+              onChange={this.handleBlogFieldChange}
+            />
+          </div>
+          <button type="submit">luo uusi</button>
+        </form>
         <br/>
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
