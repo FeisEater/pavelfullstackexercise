@@ -1,6 +1,8 @@
 import React from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -90,6 +92,7 @@ class App extends React.Component {
         blogs: this.state.blogs.concat(savedBlog)
       })
       this.showMessage('Blogi luotu', false)
+      this.blogForm.toggleVisibility()
     } catch (exception) {
       console.log(exception)
       this.showMessage('Jokin meni päin persettä, lue logi', true)      
@@ -134,37 +137,15 @@ class App extends React.Component {
         <h2>blogs</h2>
         <div>{this.state.user.name} logged in <button onClick={this.logout}>Log out</button></div>
         <br/>
-        <h2>Create new</h2>
-        <form onSubmit={this.createBlog}>
-          <div>
-            otsikko
-            <input
-              type="text"
-              name="newtitle"
-              value={this.state.newtitle}
-              onChange={this.handleBlogFieldChange}
-            />
-          </div>
-          <div>
-            tekijä
-            <input
-              type="text"
-              name="newauthor"
-              value={this.state.newauthor}
-              onChange={this.handleBlogFieldChange}
-            />
-          </div>
-          <div>
-            url
-            <input
-              type="text"
-              name="newurl"
-              value={this.state.newurl}
-              onChange={this.handleBlogFieldChange}
-            />
-          </div>
-          <button type="submit">luo uusi</button>
-        </form>
+        <Togglable buttonLabel="uusi blogi" ref={component => this.blogForm = component}>
+          <BlogForm
+            title={this.state.newtitle}
+            author={this.state.newauthor}
+            url={this.state.newurl}
+            handleChange={this.handleBlogFieldChange}
+            handleSubmit={this.createBlog}
+          />
+        </Togglable>
         <br/>
         {this.state.blogs.map(blog => 
           <Blog key={blog._id} blog={blog}/>
