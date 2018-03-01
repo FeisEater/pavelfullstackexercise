@@ -95,6 +95,22 @@ class App extends React.Component {
       this.blogForm.toggleVisibility()
     } catch (exception) {
       console.log(exception)
+      this.showMessage('Jokin meni päin persettä, lue logi', true)
+    }
+  }
+
+  likeBlog = async (blog) => {
+    try {
+      const likedBlog = await blogService.likeBlog(blog)
+      console.log(likedBlog.user)
+      const updatedBlogs = this.state.blogs.map(b => {
+        if (b._id === likedBlog._id)
+          return likedBlog
+        return b
+      })
+      this.setState({ blogs: updatedBlogs })
+    } catch (exception) {
+      console.log(exception)
       this.showMessage('Jokin meni päin persettä, lue logi', true)      
     }
   }
@@ -148,7 +164,7 @@ class App extends React.Component {
         </Togglable>
         <br/>
         {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog}/>
+          <Blog key={blog._id} blog={blog} handleLike={this.likeBlog} />
         )}
       </div>
     );

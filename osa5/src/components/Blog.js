@@ -34,11 +34,11 @@ class Blog extends React.Component {
     }
 
     return (
-      <div style={blogStyle} onClick={this.toggleExpansion}>
-        {blog.title} {blog.author}
+      <div style={blogStyle}>
+        <div onClick={this.toggleExpansion}>{blog.title} {blog.author}</div>
         <div>
           <a href={'//' + blog.url}>{blog.url}</a>
-          <div>{blog.likes} likes <button>Like</button></div>
+          <div>{blog.likes} likes <button onClick={() => this.props.handleLike(blog)}>Like</button></div>
           <div>Added by {blog.user == null ? '--' : blog.user.name}</div>
         </div>
       </div>
