@@ -24,8 +24,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    blogService.getAll().then(blogs =>
-      this.setState({ blogs })
+    blogService.getAll().then(blogs => {
+        blogs.sort((a, b) => b.likes - a.likes)      
+        this.setState({ blogs })
+      }
     )
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
@@ -85,11 +87,13 @@ class App extends React.Component {
         url: this.state.newurl,
         likes: 0
       })
+      let updatedBlogs = this.state.blogs.concat(savedBlog)
+      updatedBlogs.sort((a, b) => b.likes - a.likes)
       this.setState({
         newtitle: '',
         newauthor: '',
         newurl: '',
-        blogs: this.state.blogs.concat(savedBlog)
+        blogs: updatedBlogs
       })
       this.showMessage('Blogi luotu', false)
       this.blogForm.toggleVisibility()
@@ -102,12 +106,12 @@ class App extends React.Component {
   likeBlog = async (blog) => {
     try {
       const likedBlog = await blogService.likeBlog(blog)
-      console.log(likedBlog.user)
       const updatedBlogs = this.state.blogs.map(b => {
         if (b._id === likedBlog._id)
           return likedBlog
         return b
       })
+      updatedBlogs.sort((a, b) => b.likes - a.likes)
       this.setState({ blogs: updatedBlogs })
     } catch (exception) {
       console.log(exception)
