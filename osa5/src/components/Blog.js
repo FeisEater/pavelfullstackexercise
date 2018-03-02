@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const DeleteButton = ({deleteFunc, show}) => {
   if (!show)
@@ -10,6 +11,11 @@ const DeleteButton = ({deleteFunc, show}) => {
   )
 }
 
+DeleteButton.propTypes = {
+  deleteFunc: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired
+}
+
 class Blog extends React.Component {
 
   constructor(props) {
@@ -17,6 +23,13 @@ class Blog extends React.Component {
     this.state = {
       expanded: false
     }
+  }
+
+  static propTypes = {
+    blog: PropTypes.any.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    handleLike: PropTypes.func.isRequired,
+    ownsEntry: PropTypes.bool.isRequired
   }
 
   toggleExpansion = () => {
