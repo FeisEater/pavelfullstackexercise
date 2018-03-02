@@ -50,7 +50,7 @@ class Blog extends React.Component {
 
     if (!this.state.expanded) {
         return (
-          <div style={blogStyle} onClick={this.toggleExpansion}>
+          <div style={blogStyle} onClick={this.toggleExpansion} className="blogHeader">
             {blog.title} {blog.author}
           </div>
         )
@@ -58,11 +58,11 @@ class Blog extends React.Component {
 
     return (
       <div style={blogStyle}>
-        <div onClick={this.toggleExpansion}>{blog.title} {blog.author}</div>
-        <div>
-          <a href={'//' + blog.url}>{blog.url}</a>
-          <div>{blog.likes} likes <button onClick={() => this.props.handleLike(blog)}>Like</button></div>
-          <div>Added by {blog.user == null ? '--' : blog.user.name}</div>
+        <div onClick={this.toggleExpansion} className="blogHeader">{blog.title} {blog.author}</div>
+        <div className="details">
+          <a href={'//' + blog.url} className="urlLink">{blog.url}</a>
+          <div className="likes">{blog.likes} likes <button onClick={() => this.props.handleLike(blog)}>Like</button></div>
+          <div className="creator">Added by {blog.user == null ? '--' : blog.user.name}</div>
           <DeleteButton deleteFunc={() => this.props.handleDelete(blog)} show={this.props.ownsEntry} />
         </div>
       </div>
