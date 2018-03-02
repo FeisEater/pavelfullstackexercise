@@ -181,7 +181,11 @@ class App extends React.Component {
         </Togglable>
         <br/>
         {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog} handleLike={this.likeBlog} handleDelete={this.deleteBlog} />
+          <Blog key={blog._id}
+                blog={blog}
+                handleLike={this.likeBlog}
+                handleDelete={this.deleteBlog}
+                ownsEntry={blog.user === null || blog.user.username === this.state.user.username}/>
         )}
       </div>
     );

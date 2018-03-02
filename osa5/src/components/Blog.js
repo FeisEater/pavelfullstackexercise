@@ -1,5 +1,15 @@
 import React from 'react'
 
+const DeleteButton = ({deleteFunc, show}) => {
+  if (!show)
+    return null
+  return (
+    <div>
+      <button onClick={deleteFunc}>Delete</button>
+    </div>
+  )
+}
+
 class Blog extends React.Component {
 
   constructor(props) {
@@ -40,7 +50,7 @@ class Blog extends React.Component {
           <a href={'//' + blog.url}>{blog.url}</a>
           <div>{blog.likes} likes <button onClick={() => this.props.handleLike(blog)}>Like</button></div>
           <div>Added by {blog.user == null ? '--' : blog.user.name}</div>
-          <div><button onClick={() => this.props.handleDelete(blog)}>Delete</button></div>
+          <DeleteButton deleteFunc={() => this.props.handleDelete(blog)} show={this.props.ownsEntry} />
         </div>
       </div>
     )
