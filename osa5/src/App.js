@@ -115,7 +115,20 @@ class App extends React.Component {
       this.setState({ blogs: updatedBlogs })
     } catch (exception) {
       console.log(exception)
-      this.showMessage('Jokin meni päin persettä, lue logi', true)      
+      this.showMessage('Jokin meni päin persettä, lue logi', true)
+    }
+  }
+
+  deleteBlog = async (blog) => {
+    try {
+      if (!window.confirm("Poistetaanko " + blog.title + "?"))
+        return
+      await blogService.removeBlog(blog)
+      const updatedBlogs = this.state.blogs.filter(b => b._id !== blog._id)
+      this.setState({ blogs: updatedBlogs })
+    } catch (exception) {
+      console.log(exception)
+      this.showMessage('Ei voi poistaa blogia', true)
     }
   }
 
@@ -168,7 +181,7 @@ class App extends React.Component {
         </Togglable>
         <br/>
         {this.state.blogs.map(blog => 
-          <Blog key={blog._id} blog={blog} handleLike={this.likeBlog} />
+          <Blog key={blog._id} blog={blog} handleLike={this.likeBlog} handleDelete={this.deleteBlog} />
         )}
       </div>
     );
