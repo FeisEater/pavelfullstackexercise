@@ -139,7 +139,7 @@ class App extends React.Component {
           <Notification message={this.state.message} isError={this.state.messageIsError}/>
           <h2>Kirjaudu</h2>
   
-          <form onSubmit={this.login}>
+          <form onSubmit={this.login} className="loginForm">
             <div>
               käyttäjätunnus
               <input
@@ -168,7 +168,7 @@ class App extends React.Component {
       <div>
         <Notification message={this.state.message} isError={this.state.messageIsError}/>
         <h2>blogs</h2>
-        <div>{this.state.user.name} logged in <button onClick={this.logout}>Log out</button></div>
+        <div className="userDiv">{this.state.user.name} logged in <button onClick={this.logout}>Log out</button></div>
         <br/>
         <Togglable buttonLabel="uusi blogi" ref={component => this.blogForm = component}>
           <BlogForm
