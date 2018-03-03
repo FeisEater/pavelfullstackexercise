@@ -1,195 +1,44 @@
-import React from 'react'
-import Blog from './components/Blog'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import React from 'react';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      blogs: [],
-      username: '',
-      password: '',
-      user: null,
-      newtitle: '',
-      newauthor: '',
-      newurl: '',
-      message: null,
-      messageIsError: false
+const actionFor = {
+  vote(id) {
+    return {
+      type: 'VOTE',
+      data: { id }
     }
-    this.msgTimeout = setTimeout(() => {}, 0)
-  }
-
-  componentDidMount() {
-    blogService.getAll().then(blogs => {
-        blogs.sort((a, b) => b.likes - a.likes)      
-        this.setState({ blogs })
-      }
-    )
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      this.setState({user})
-      blogService.setToken(user.token)
-    }  
-  } 
-
-  showMessage = (msg, isError) => {
-    this.setState({
-      message: msg,
-      messageIsError: isError
-    })
-    clearTimeout(this.msgTimeout)
-    this.msgTimeout = setTimeout(() => {
-      this.setState({ message: null })
-    }, 5000)
-  }
-
-  login = async (event) => {
-    event.preventDefault()
-    try{
-      const user = await loginService.login({
-        username: this.state.username,
-        password: this.state.password
-      })
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
-      this.setState({ username: '', password: '', user})
-      blogService.setToken(user.token)
-    } catch(exception) {
-      this.showMessage('käyttäjätunnus tai salasana virheellinen', true)
-    }
-  }
-
-  logout = event => {
-    window.localStorage.removeItem('loggedUser')   
-    this.setState({user: null})
-    blogService.setToken(null)
-    this.showMessage('kirjauduttu ulos', false)
-  }
-
-  handleLoginFieldChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
-  handleBlogFieldChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-  
-  createBlog = async (event) => {
-    event.preventDefault()    
-    try {
-      const savedBlog = await blogService.createBlog({
-        title: this.state.newtitle,
-        author: this.state.newauthor,
-        url: this.state.newurl,
-        likes: 0
-      })
-      let updatedBlogs = this.state.blogs.concat(savedBlog)
-      updatedBlogs.sort((a, b) => b.likes - a.likes)
-      this.setState({
-        newtitle: '',
-        newauthor: '',
-        newurl: '',
-        blogs: updatedBlogs
-      })
-      this.showMessage('Blogi luotu', false)
-      this.blogForm.toggleVisibility()
-    } catch (exception) {
-      console.log(exception)
-      this.showMessage('Jokin meni päin persettä, lue logi', true)
-    }
-  }
-
-  likeBlog = async (blog) => {
-    try {
-      const likedBlog = await blogService.likeBlog(blog)
-      const updatedBlogs = this.state.blogs.map(b => {
-        if (b._id === likedBlog._id)
-          return likedBlog
-        return b
-      })
-      updatedBlogs.sort((a, b) => b.likes - a.likes)
-      this.setState({ blogs: updatedBlogs })
-    } catch (exception) {
-      console.log(exception)
-      this.showMessage('Jokin meni päin persettä, lue logi', true)
-    }
-  }
-
-  deleteBlog = async (blog) => {
-    try {
-      if (!window.confirm("Poistetaanko " + blog.title + "?"))
-        return
-      await blogService.removeBlog(blog)
-      const updatedBlogs = this.state.blogs.filter(b => b._id !== blog._id)
-      this.setState({ blogs: updatedBlogs })
-    } catch (exception) {
-      console.log(exception)
-      this.showMessage('Ei voi poistaa blogia', true)
-    }
-  }
-
-  render() {
-    if (this.state.user === null) {
-      return (
-        <div>
-          <Notification message={this.state.message} isError={this.state.messageIsError}/>
-          <h2>Kirjaudu</h2>
-  
-          <form onSubmit={this.login} className="loginForm">
-            <div>
-              käyttäjätunnus
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleLoginFieldChange}
-              />
-            </div>
-            <div>
-              salasana
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleLoginFieldChange}
-              />
-            </div>
-            <button type="submit">kirjaudu</button>
-          </form>
-        </div>
-      )
-    }
-    
-    return (
-      <div>
-        <Notification message={this.state.message} isError={this.state.messageIsError}/>
-        <h2>blogs</h2>
-        <div className="userDiv">{this.state.user.name} logged in <button onClick={this.logout}>Log out</button></div>
-        <br/>
-        <Togglable buttonLabel="uusi blogi" ref={component => this.blogForm = component}>
-          <BlogForm
-            title={this.state.newtitle}
-            author={this.state.newauthor}
-            url={this.state.newurl}
-            handleChange={this.handleBlogFieldChange}
-            handleSubmit={this.createBlog}
-          />
-        </Togglable>
-        <br/>
-        {this.state.blogs.map(blog => 
-          <Blog key={blog._id}
-                blog={blog}
-                handleLike={this.likeBlog}
-                handleDelete={this.deleteBlog}
-                ownsEntry={blog.user === null || blog.user.username === this.state.user.username}/>
-        )}
-      </div>
-    );
   }
 }
 
-export default App;
+class App extends React.Component {
+  vote = (id) => () => {
+    this.props.store.dispatch(
+      actionFor.vote(id)
+    )
+  }
+  render() {
+    const anecdotes = this.props.store.getState()
+    return (
+      <div>
+        <h2>Anecdotes</h2>
+        {anecdotes.map(anecdote=>
+          <div key={anecdote.id}>
+            <div>
+              {anecdote.content} 
+            </div>
+            <div>
+              has {anecdote.votes}
+              <button onClick={this.vote(anecdote.id)}>vote</button>
+            </div>
+          </div>
+        )}
+        <h2>create new</h2>
+        <form>
+          <div><input /></div>
+          <button>create</button> 
+        </form>
+      </div>
+    )
+  }
+}
+
+export default App
