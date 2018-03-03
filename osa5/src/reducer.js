@@ -21,12 +21,14 @@ const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
   if (action.type === 'VOTE') {
-    return state.map(anecdote => {
+    let newState = state.map(anecdote => {
         if (anecdote.id === action.data.id) {
             anecdote.votes += 1
         }
         return anecdote
     })
+    newState.sort((a,b) => b.votes - a.votes)
+    return newState
   }
   
   return state
