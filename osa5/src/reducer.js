@@ -30,6 +30,9 @@ const reducer = (state = initialState, action) => {
     newState.sort((a,b) => b.votes - a.votes)
     return newState
   }
+  if (action.type === 'NEW') {
+      return state.concat(asObject(action.data.anecdote))
+  }
   
   return state
 }
