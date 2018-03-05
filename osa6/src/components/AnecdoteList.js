@@ -1,4 +1,5 @@
 import React from 'react'
+import { showInfo, hide } from '../reducers/notificationReducer'
 
 class AnecdoteList extends React.Component {
   render() {
@@ -13,9 +14,11 @@ class AnecdoteList extends React.Component {
             </div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => 
+              <button onClick={() => {
                 this.props.store.dispatch({ type: 'VOTE', id: anecdote.id })
-              }>
+                this.props.store.dispatch(showInfo('voted for "' + anecdote.content + '"'))
+                setTimeout(() => this.props.store.dispatch(hide()), 5000)
+              }}>
                 vote
               </button>
             </div>

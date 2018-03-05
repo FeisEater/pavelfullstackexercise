@@ -1,4 +1,7 @@
-const reducer = (store = 'hey hey heyyy', action) => {
+export const showInfo = (msg) => { return { type: 'INFO', msg } }
+export const hide = () => { return { type: 'INFO', msg: '' } }
+
+const reducer = (store = '', action) => {
   if (action.type === 'INFO') {
     return action.msg
   }
