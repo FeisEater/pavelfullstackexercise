@@ -1,5 +1,12 @@
-export const showInfo = (msg) => { return { type: 'INFO', msg } }
-export const hide = () => { return { type: 'INFO', msg: '' } }
+let timer
+
+export const info = (msg, timeout) => {
+  return async (dispatch) => {
+    dispatch({ type: 'INFO', msg })
+    clearTimeout(timer)
+    timer = setTimeout(() => dispatch({ type: 'INFO', msg: '' }), timeout)
+  }
+}
 
 const reducer = (store = '', action) => {
   if (action.type === 'INFO') {

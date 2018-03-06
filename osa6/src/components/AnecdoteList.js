@@ -1,6 +1,6 @@
 import React from 'react'
 import { vote } from '../reducers/anecdoteReducer'
-import { showInfo, hide } from '../reducers/notificationReducer'
+import { info } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
 
 const AnecdoteList = (props) => {
@@ -26,8 +26,7 @@ const AnecdoteList = (props) => {
 
 const doVote = async (anecdote, props) => {
   props.vote(anecdote)
-  props.showInfo('voted for "' + anecdote.content + '"')
-  setTimeout(() => props.hide(), 5000)
+  props.info(`voted for ${anecdote.content}`, 5000)
 }
 
 const mapStateToProps = (state) => {
@@ -39,7 +38,7 @@ const mapStateToProps = (state) => {
 
 const ConnectedAnecdoteList = connect(
   mapStateToProps,
-  { vote, showInfo, hide }
+  { vote, info }
 )(AnecdoteList)
 
 export default ConnectedAnecdoteList
