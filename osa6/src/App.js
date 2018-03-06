@@ -1,8 +1,8 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom'
-import { Container, Table, Grid, Image } from 'semantic-ui-react'
+import { Container, Table, Grid, Image, Form, Button, Message, Menu } from 'semantic-ui-react'
 
-const Menu = () => {
+const MyMenu = () => {
   const containerStyle = {
     backgroundColor: '#ccccff',
     padding: 5
@@ -16,11 +16,11 @@ const Menu = () => {
     fontWeight: 'bold'
   }
   return (
-    <div style={containerStyle}>    
-      <NavLink exact to="/" style={inactiveStyle} activeStyle={activeStyle}>anecdotes</NavLink>&nbsp;
-      <NavLink exact to="/create" style={inactiveStyle} activeStyle={activeStyle}>create new</NavLink>&nbsp;
-      <NavLink exact to="/about" style={inactiveStyle} activeStyle={activeStyle}>about</NavLink>&nbsp;
-    </div>
+    <Menu inverted>    
+      <Menu.Item link><NavLink exact to="/" activeStyle={activeStyle}>anecdotes</NavLink></Menu.Item>
+      <Menu.Item link><NavLink exact to="/create" activeStyle={activeStyle}>create new</NavLink></Menu.Item>
+      <Menu.Item link><NavLink exact to="/about" activeStyle={activeStyle}>about</NavLink></Menu.Item>
+    </Menu>
   )
 }
 
@@ -57,11 +57,11 @@ const About = () => (
 )
 
 const Footer = () => (
-  <div>
+  <Container>
     Anecdote app for <a href='https://courses.helsinki.fi/fi/TKT21009/121540749'>Full Stack -sovelluskehitys</a>.
 
     See <a href='https://github.com/mluukkai/routed-anecdotes'>https://github.com/mluukkai/routed-anecdotes</a> for the source code. 
-  </div>
+  </Container>
 )
 
 const Notification = (props) => {
@@ -75,9 +75,9 @@ const Notification = (props) => {
   if (props.msg === '')
     return (<div></div>)
   return (
-    <div style={notificationStyle}>
+    <Message success>
       {props.msg}
-    </div>
+    </Message>
   )
 }
 
@@ -111,21 +111,21 @@ class CreateNew extends React.Component {
     return(
       <div>
         <h2>create a new anecdote</h2>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            content 
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Field>
+            <label>content</label> 
             <input name='content' value={this.state.content} onChange={this.handleChange} />
-          </div>
-          <div>
-            author
+          </Form.Field>
+          <Form.Field>
+            <label>author</label>
             <input name='author' value={this.state.author} onChange={this.handleChange} />
-          </div>
-          <div>
-            url for more info
+          </Form.Field>
+          <Form.Field>
+            <label>url for more info</label>
             <input name='info' value={this.state.info} onChange={this.handleChange} />
-          </div> 
-          <button>create</button>
-        </form>
+          </Form.Field> 
+          <Button>create</Button>
+        </Form>
       </div>  
     )
 
@@ -196,7 +196,7 @@ class App extends React.Component {
           <div>
             <h1>Software anecdotes</h1>
               <Notification msg={this.state.notification} />
-              <Menu />
+              <MyMenu />
               <Route exact path="/" render={() => <AnecdoteList anecdotes={this.state.anecdotes} />} />
               <Route path="/about" render={() => <About />} />
               <Route path="/create" render={({history}) => <CreateNew history={history} addNew={this.addNew}/>} />
