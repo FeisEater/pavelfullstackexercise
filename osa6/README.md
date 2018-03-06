@@ -1,1 +1,1 @@
-## anecdotes
+## anecdote app
