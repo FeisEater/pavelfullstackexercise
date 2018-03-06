@@ -2,7 +2,6 @@ import React from 'react'
 import { vote } from '../reducers/anecdoteReducer'
 import { showInfo, hide } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
-import anecdoteService from '../services/anecdotes'
 
 const AnecdoteList = (props) => {
   return (
@@ -26,13 +25,8 @@ const AnecdoteList = (props) => {
 }
 
 const doVote = async (anecdote, props) => {
-  const newAnecdote = await anecdoteService.modify({
-    content: anecdote.content,
-    id: anecdote.id,
-    votes: anecdote.votes + 1
-  })
-  props.vote(newAnecdote)
-  props.showInfo('voted for "' + newAnecdote.content + '"')
+  props.vote(anecdote)
+  props.showInfo('voted for "' + anecdote.content + '"')
   setTimeout(() => props.hide(), 5000)
 }
 
