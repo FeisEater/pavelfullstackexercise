@@ -21,10 +21,12 @@ export const login = (credentials) => {
 
 export const loginLocalStorage = () => {
   return async (dispatch) => {
-    const user = JSON.parse(window.localStorage.getItem('loggedUser'))
-    if (user)
+    try {
+      const user = JSON.parse(window.localStorage.getItem('loggedUser'))
+      if (user)
         blogService.setToken(user.token)
-    dispatch({ type: 'LOGIN', user })
+      dispatch({ type: 'LOGIN', user })
+    } catch (exception) {}
   }
 }
 

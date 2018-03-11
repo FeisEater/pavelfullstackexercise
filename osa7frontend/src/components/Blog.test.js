@@ -1,21 +1,24 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
 import Blog from './Blog'
+import store from '../store'
+import { Provider } from 'react-redux'
 
 describe('<Blog />', () => {
   it('after clicking name the details are displayed', () => {
     const blog = {
-      title: 'testTitle',
+      title: 'testTitlee',
       author: 'testAuthor',
       url: 'testUrl',
       likes: 5,
       user: {
-          name: 'Test Creator'
+          name: 'Test Creator',
+          username: 'test'
       }
     }
 
     const mockHandler = jest.fn()
-    const blogComponent = shallow(<Blog blog={blog} />)
+    const blogComponent = mount(<Provider store={store}><Blog blog={blog} /></Provider>)
 
     const headerDivBefore = blogComponent.find('.blogHeader')
     expect(headerDivBefore.text()).toContain(`${blog.title} ${blog.author}`)

@@ -68,7 +68,8 @@ class Blog extends React.Component {
           <a href={'//' + blog.url} className="urlLink">{blog.url}</a>
           <div className="likes">{blog.likes} likes <button onClick={() => this.props.likeBlog(blog)}>Like</button></div>
           <div className="creator">Added by {blog.user == null ? '--' : blog.user.name}</div>
-          <DeleteButton deleteFunc={() => this.deleteBlog(blog)} show={blog.user === null || blog.user.username === this.props.loggedIn.username} />
+          <DeleteButton deleteFunc={() => this.deleteBlog(blog)}
+            show={blog.user === null || this.props.loggedIn === null || blog.user.username === this.props.loggedIn.username} />
         </div>
       </div>
     )

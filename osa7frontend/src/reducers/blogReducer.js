@@ -9,7 +9,7 @@ export const createBlog = (blog, loggedIn) => {
       dispatch({ type: 'CREATE', data })
     } catch (exception) {
       console.log(exception)
-      localError('Jokin meni päin persettä, lue logi', 5000, dispatch)
+      localError('Jokin meni päin persettä, lue logi!', 5000, dispatch)
     }
   }
 }
