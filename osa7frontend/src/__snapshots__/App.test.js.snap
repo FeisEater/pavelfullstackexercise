@@ -1,0 +1,161 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App /> when user is logged snapshot test 1`] = `
+<div>
+  <h2>
+    blogs
+  </h2>
+  <div
+    className="userDiv"
+  >
+    Real Name
+     logged in 
+    <button
+      onClick={[Function]}
+    >
+      Log out
+    </button>
+  </div>
+  <br />
+  <div>
+    <div
+      style={
+        Object {
+          "display": "",
+        }
+      }
+    >
+      <button
+        onClick={[Function]}
+      >
+        uusi blogi
+      </button>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "none",
+        }
+      }
+    >
+      <div>
+        <h2>
+          Create new
+        </h2>
+        <form
+          onSubmit={[Function]}
+        >
+          <div>
+            otsikko
+            <input
+              name="newtitle"
+              onChange={[Function]}
+              type="text"
+              value=""
+            />
+          </div>
+          <div>
+            tekijä
+            <input
+              name="newauthor"
+              onChange={[Function]}
+              type="text"
+              value=""
+            />
+          </div>
+          <div>
+            url
+            <input
+              name="newurl"
+              onChange={[Function]}
+              type="text"
+              value=""
+            />
+          </div>
+          <button
+            type="submit"
+          >
+            luo uusi
+          </button>
+        </form>
+      </div>
+      <button
+        onClick={[Function]}
+      >
+        cancel
+      </button>
+    </div>
+  </div>
+  <br />
+  <div
+    className="blogHeader"
+    onClick={[Function]}
+    style={
+      Object {
+        "border": "solid",
+        "borderWidth": 1,
+        "marginBottom": 5,
+        "paddingLeft": 2,
+        "paddingTop": 10,
+      }
+    }
+  >
+    authorised title
+     
+    me
+  </div>
+  <div
+    className="blogHeader"
+    onClick={[Function]}
+    style={
+      Object {
+        "border": "solid",
+        "borderWidth": 1,
+        "marginBottom": 5,
+        "paddingLeft": 2,
+        "paddingTop": 10,
+      }
+    }
+  >
+    otsikko
+     
+    tekijä
+  </div>
+</div>
+`;
+
+exports[`<App /> when user is not logged snapshot test 1`] = `
+<div>
+  <h2>
+    Kirjaudu
+  </h2>
+  <form
+    className="loginForm"
+    onSubmit={[Function]}
+  >
+    <div>
+      käyttäjätunnus
+      <input
+        name="username"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+    <div>
+      salasana
+      <input
+        name="password"
+        onChange={[Function]}
+        type="password"
+        value=""
+      />
+    </div>
+    <button
+      type="submit"
+    >
+      kirjaudu
+    </button>
+  </form>
+</div>
+`;

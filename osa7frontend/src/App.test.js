@@ -6,6 +6,7 @@ jest.mock('./services/blogs')
 import blogService from './services/blogs'
 import store from './store'
 import { Provider } from 'react-redux'
+import renderer from 'react-test-renderer'
 
 describe.only('<App />', () => {
   let app
@@ -21,6 +22,13 @@ describe.only('<App />', () => {
       const blogComponents = app.find(Blog)
       expect(app.find('.loginForm').length).toEqual(1)
       expect(blogComponents.length).toEqual(0)
+    })
+
+    it('snapshot test', () => {
+      const tree = renderer
+        .create(<Provider store={store}><App /></Provider>)
+        .toJSON();
+      expect(tree).toMatchSnapshot();
     })
   })
 
@@ -39,6 +47,13 @@ describe.only('<App />', () => {
       const blogComponents = app.find(Blog)
       expect(app.find('.loginForm').length).toEqual(0)
       expect(blogComponents.length).toEqual(2)
+    })
+    
+    it('snapshot test logged in', () => {
+      const tree = renderer
+        .create(<Provider store={store}><App /></Provider>)
+        .toJSON();
+      expect(tree).toMatchSnapshot();
     })
   })
 })
