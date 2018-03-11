@@ -8,7 +8,7 @@ import store from './store'
 import { Provider } from 'react-redux'
 import renderer from 'react-test-renderer'
 
-describe.only('<App />', () => {
+describe('<App />', () => {
   let app
 
   describe('when user is not logged', () => {

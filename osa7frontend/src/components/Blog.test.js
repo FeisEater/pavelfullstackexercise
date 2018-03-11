@@ -13,7 +13,7 @@ describe('<Blog />', () => {
       likes: 5,
       user: {
           name: 'Test Creator',
-          username: 'test'
+          username: 'testi'
       }
     }
 

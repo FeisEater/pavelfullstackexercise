@@ -13,6 +13,7 @@ export const login = (credentials) => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       dispatch({ type: 'LOGIN', user })
+      localInfo(`Tere tulemast, ${user.name}`, 5000, dispatch)
     } catch (exception) {
       localError('käyttäjänimi tai salasana väärin', 5000, dispatch)
     }
